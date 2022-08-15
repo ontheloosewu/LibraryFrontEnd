@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Book</title>
+</head>
+<body>
+    <nav><a href = "book-viewer.html">Book Viewer</a></nav>
+
+    <h1>Register Book</h1>
+
+    <!-- Buttons in forms cause a submission event. It automatically tries to submit the information in the server. Before AJAX html forms were the only way
+    to submit info to a server on a webpage. IT FORCES THE WEB PAGE TO RELOAD -->
+    <form>
+
+        <fieldset> 
+            <legend>Book Info</legend>
+
+            <label for = "inputTitle">Title</label>
+            <input id = "inputTitle" type = "text" placeholder = "Kite Runner">
+
+            <label for = "inputAuthor">Author</label>
+            <input id = "inputAuthor" type = "text" placeholder = "Khaled Hosseini">
+        </fieldset>
+
+        <button>Submit</button>
+    </form>
+</body>
+
+<script>
+
+    const inputTitle = document.getElementById("inputTitle");
+    const inputAuthor = document.getElementById("inputAuthor");
+
+
+    document.addEventListener("submit", async event => {
+        event.preventDefault(); // will catch the submit event from the form and prevent sending an HTTP request immediately and reloading page
+
+        const title = inputTitle.value;
+        const author = inputAuthor.value;
+
+        // you can just use the varaible without duplicating the key name for shorter syntax
+        const book = {id:0, title, author, returnDate:0};
+
+        // second argument are options for the fetch
+        const response = await fetch("http://d6d4-2603-301f-1625-c000-ede3-8275-d0c3-fe31.ngrok.io/books", {
+            method:"POST",
+            body: JSON.stringify(book),
+            headers:{
+                "Content-Type":"application/json"
+            }
+        });
+
+        if(response.status === 201){
+            alert("Successfully created a book");
+            inputTitle.value = "";
+            inputAuthor.value = "";
+        } else {
+            alert("Something went wrong!");
+        }
+    });
+</script>
+</html>
